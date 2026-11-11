@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
 
@@ -17,14 +17,32 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: 8.11.1
+      - name: Toza muhitda yig'ish
+        run: |
+          set -e
+          echo "--- repo fayllari ---"
+          find . -maxdepth 3 -not -path './.git/*' -not -path './app/src/*' | sort
+          echo "--- ~/.gradle (bor bo'lsa) ---"
+          ls -la ~/.gradle ~/.gradle/init.d 2>/dev/null || echo "yo'q"
 
-      - name: Debug APK yig'ish
-        run: gradle assembleDebug --stacktrace
+          # Repodagi ortiqcha/eski fayllar (buildSrc va h.k.) xalaqit bermasligi uchun
+          # faqat kerakli fayllarni toza papkaga ko'chiramiz
+          B="$RUNNER_TEMP/clean"
+          mkdir -p "$B"
+          cp -r app settings.gradle.kts build.gradle.kts gradle.properties "$B/"
+
+          # Gradle ni o'zimiz yuklaymiz va alohida (toza) GRADLE_USER_HOME ishlatamiz
+          curl -fsSL https://services.gradle.org/distributions/gradle-8.11.1-bin.zip -o "$RUNNER_TEMP/g.zip"
+          unzip -q "$RUNNER_TEMP/g.zip" -d "$RUNNER_TEMP"
+          export GRADLE_USER_HOME="$RUNNER_TEMP/gradle-home"
+
+          cd "$B"
+          "$RUNNER_TEMP/gradle-8.11.1/bin/gradle" assembleDebug --stacktrace --no-daemon
+
+          mkdir -p "$GITHUB_WORKSPACE/out"
+          cp app/build/outputs/apk/debug/app-debug.apk "$GITHUB_WORKSPACE/out/"
 
       - uses: actions/upload-artifact@v4
         with:
           name: MebelAR-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: out/app-debug.apk
