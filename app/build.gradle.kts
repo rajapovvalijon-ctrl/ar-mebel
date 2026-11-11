@@ -1,12 +1,12 @@
 plugins {
-    id("com.android.application")
+    id("com.android.application") version "8.9.1" apply false
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
     namespace = "uz.mebelar"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "uz.mebelar"
