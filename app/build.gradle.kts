@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application") version "8.9.1" apply false
+    id("com.android.application") version "8.7.3" apply false
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
 }
@@ -27,6 +27,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+   configurations.configureEach {
+       resolutionStrategy {
+           force("androidx.core:core:1.15.0", "androidx.core:core-ktx:1.15.0")
+       }
+   }
     kotlinOptions { jvmTarget = "17" }
     buildFeatures { compose = true }
     // .glb fayllar siqilmasin
