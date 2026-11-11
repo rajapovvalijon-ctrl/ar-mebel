@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "uz.mebelar"
-    compileSdk = 36
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "uz.mebelar"
@@ -27,11 +27,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-   configurations.configureEach {
-       resolutionStrategy {
-           force("androidx.core:core:1.15.0", "androidx.core:core-ktx:1.15.0")
-       }
-   }
+   
     kotlinOptions { jvmTarget = "17" }
     buildFeatures { compose = true }
     // .glb fayllar siqilmasin
@@ -44,4 +40,9 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui")
     implementation("io.github.sceneview:arsceneview:2.3.3")
+configurations.configureEach {
+       resolutionStrategy {
+           force("androidx.core:core:1.15.0", "androidx.core:core-ktx:1.15.0")
+       }
+   }
 }
